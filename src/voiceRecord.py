@@ -3,10 +3,9 @@ import keyboard
 import pyaudio
 import wave
 
-#will run the output sound
-playsound("voice.wav")
 
-KEYBIND_TALK = "f"
+
+KEYBIND_TALK = "a"
 chunk = 1024  # Record in chunks of 1024 samples
 sample_format = pyaudio.paInt16  # 16 bits per sample
 channels = 2
@@ -26,6 +25,7 @@ def on_press(event):
 
 #on release of keybind, saves the sound and converts to wav file.
 def on_release(event):
+    playsound("voice.wav")
     global recording
     stream.stop_stream()
     stream.close()
@@ -34,17 +34,13 @@ def on_release(event):
     #saves to wav file
     wf = wave.open(filename, 'wb')
     wf.setnchannels(channels)
-    wf.setsampwidth(p.get_sample_size(sample_format))
+    wf.setsampwidth(pa.get_sample_size(sample_format))
     wf.setframerate(fs)
     wf.writeframes(b''.join(frames))
     wf.close()
 
 
-
     #pass audio to translator and to AIVoice output, then play sound.
-
-    
-
 
 
 if __name__ == "__main__":
@@ -55,7 +51,7 @@ if __name__ == "__main__":
     frames = []
     stream = None
     recording = False
-
+    
     keyboard.on_press(KEYBIND_TALK, on_press)
     keyboard.on_release(KEYBIND_TALK, on_release)
 
@@ -65,6 +61,6 @@ try:
         if(recording == True):
             data = stream.read(chunk)
             frames.append(data)
-except:
+except KeyboardInterrupt:
     print("Recording state off.")
         
