@@ -5,12 +5,12 @@ import asyncio
 speaker = 20; #check voicevox_speakers.json for speakers list
 
 
-async def voiceConversion(inputText):
+async def voiceConversion():
     async with Client() as client:
         audio_query = await client.create_audio_query(
-            inputText, speaker = speaker
+            "バカ野郎、ぶっ飛ばしてやる", speaker = speaker
         )
-        with open("sound/aivoice.wav", "wb") as f:
+        with open("voice.wav", "wb") as f:
             f.write(await audio_query.synthesis(speaker = speaker))
 
 

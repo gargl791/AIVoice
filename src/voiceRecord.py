@@ -1,9 +1,15 @@
+from time import sleep
 from playsound import playsound
+from LanguageTrans import translateText, transcribeFile
+from AIVoice import voiceConversion
 import keyboard
 import pyaudio
 import wave
+from voicevox import Client
+import asyncio
 
-
+#Status is ready to record
+print("ready to record")
 
 KEYBIND_TALK = "a"
 chunk = 1024  # Record in chunks of 1024 samplesaaaaaaaaaaaaaaaaaa
@@ -42,31 +48,45 @@ def on_release_key(event):
     wf.setframerate(fs)
     wf.writeframes(b''.join(frames))
     wf.close()
+
+
+    #pass audio to languageTrans and to AIVoice output
+
+    #passes user input audio to LanguageTrans.py
+    transcribed = transcribeFile("sound/output.wav")
+    translatedText = translateText(transcribed)
+
+    async def test():
+        await voiceConversion(translatedText)
+    
+    asyncio.run(test())
+
     print("Completed voice recording")
 
 
-    #pass audio to translator and to AIVoice output, then play sound.
-
-
 if __name__ == "__main__":
-
-    #Event handlers which perform when the KEYBIND_TALK key is pressed
-    keyboard.on_press_key(KEYBIND_TALK, on_press_key)
-    keyboard.on_release_key(KEYBIND_TALK, on_release_key)
     
+
+    #Create portAudio interface
+    pa = pyaudio.PyAudio()
+
+
     # Store the frames in an array
     frames = []
     recording = False
     stream = None
     
-    #Create portAudio interface
-    pa = pyaudio.PyAudio()
+    #Event handlers which perform when the KEYBIND_TALK key is pressed
+    keyboard.on_press_key(KEYBIND_TALK, on_press_key)
+    keyboard.on_release_key(KEYBIND_TALK, on_release_key)
+
 
     try:
         while True:
             if(recording and stream is not None):
                 data = stream.read(chunk)
                 frames.append(data)
+            
 
 
 
