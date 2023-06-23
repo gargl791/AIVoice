@@ -6,14 +6,11 @@ from googletrans import Translator
 
 #Speech to text conversion of a sound file (.mp3, .wav etc)
 model = whisper.load_model("base")
-result = model.transcribe("voice.wav", fp16 = False)
+result = model.transcribe("trim.mp3", fp16 = False)
 
 #Speech to text output
 language = result["language"]
 output = result["text"]
-
-
-resultSynth = languageTrans.translateText(result["text"], language)
 
 async def main():
     async with Client() as client:
