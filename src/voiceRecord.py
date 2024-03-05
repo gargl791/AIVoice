@@ -40,7 +40,6 @@ def on_release_key(event):
     stream.close()
     stream = None
 
-
     #saves to wav file
     wf = wave.open(filename, 'wb')
     wf.setnchannels(channels)
